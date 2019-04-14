@@ -227,7 +227,6 @@
 										var length = figures.length;
 										var inicialVector = new THREE.Vector3(0,0,0);
 										var linePoints = new THREE.Geometry();
-										var divMatrixText = "";
 
 										// This calculation is to find the center of the object
 										var temp = new THREE.Vector3(0,0,0);
@@ -256,7 +255,6 @@
 											// For some reason the add bug does not happen with the line, I guess
 											figures[i].position.add(negative);
 											obj.add(figures[i]);
-											divMatrixText += `${figures[i].position.x.toFixed(2)} ${figures[i].position.y.toFixed(2)} ${figures[i].position.z.toFixed(2)}</br>`;
 										}
 
 										var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
@@ -290,7 +288,7 @@
 						var length  = vector.children.length-1;
 						for (i = 0; i < length; i++){
 							var temp = vector.position.clone();
-							var relativePosition = temp.add(vector.children[i].position).clone().divideScalar(-1);
+							var relativePosition = vector.children[i].getWorldPosition().clone();
 
 							matrix += `${relativePosition.x.toFixed(2)} ${relativePosition.y.toFixed(2)} ${relativePosition.z.toFixed(2)}</br>`;
 						}
