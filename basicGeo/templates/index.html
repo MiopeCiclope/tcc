@@ -213,7 +213,7 @@
 				var settings = {
 					'Add Points' : function() {
 										var addedObject = addPoint(new THREE.Vector3(0, 0, 0));
-										AddDiv(addedObject, -1);
+										AddDiv(addedObject, -1, "");
 									},
 					'Select Points' : function() {
 										var selectedObject = scene.getObjectByName("TransformControl");
@@ -227,6 +227,7 @@
 										var length = figures.length;
 										var inicialVector = new THREE.Vector3(0,0,0);
 										var linePoints = new THREE.Geometry();
+										var divMatrixText = "";
 
 										// This calculation is to find the center of the object
 										var temp = new THREE.Vector3(0,0,0);
@@ -255,20 +256,19 @@
 											// For some reason the add bug does not happen with the line, I guess
 											figures[i].position.add(negative);
 											obj.add(figures[i]);
+											divMatrixText += `${figures[i].position.x.toFixed(2)} ${figures[i].position.y.toFixed(2)} ${figures[i].position.z.toFixed(2)}</br>`;
 										}
 
 										var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
 										var line = new THREE.Line( linePoints, material );
 										scene.add(line);
-										// figures.push(line);
-
 										obj.add(line);
 										// poping the objects to remove the transform control
 										for (i = 0; i < length2+1; i++){
 											figures.pop();
 										}
-
 										figures.push(obj);
+										AddDiv(obj, -1);
 									}
 				}
 
@@ -277,17 +277,29 @@
 				gui.add(settings, 'Select Points');
 				gui.add(settings, 'Draw Figure');
 
-				function AddDiv ( vector, figureId ) {
+				function AddDiv ( vector, figureId) {
 					var figureNumber = figureId;
 					if (figureId == -1){
 						FigureCount++;
 						figureNumber = FigureCount;
 					}
 
+					var matrix = `${vector.position.x.toFixed(2)} ${vector.position.y.toFixed(2)} ${vector.position.z.toFixed(2)}`;
+					if (vector.children.length > 0){
+						matrix = "";
+						var length  = vector.children.length-1;
+						for (i = 0; i < length; i++){
+							var temp = vector.position.clone();
+							var relativePosition = temp.add(vector.children[i].position).clone().divideScalar(-1);
+
+							matrix += `${relativePosition.x.toFixed(2)} ${relativePosition.y.toFixed(2)} ${relativePosition.z.toFixed(2)}</br>`;
+						}
+					}
+
 					matrixStack.innerHTML =`<div class="toast-header" onclick="clicked(this)" id="${divCount}">
 												<input type="hidden" name="figureId" value="${figureNumber}">
 												<strong class="mr-auto">Figura ${figureNumber}</strong>
-												<p class="text-muted">${vector.position.x.toFixed(2)} ${vector.position.y.toFixed(2)} ${vector.position.z.toFixed(2)}</br></p>
+												<p class="text-muted">${matrix}</br></p>
 											</div>` + matrixStack.innerHTML;
 					figureLinkDiv.push();
 					divCount++;
