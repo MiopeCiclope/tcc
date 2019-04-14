@@ -15,7 +15,15 @@
 				font-family: Monospace;
 				/* background-color: #000000; */
 				margin: 0px;
+				padding: 0px; 
 				overflow: hidden;
+			}
+			.scrollable {
+				/* right: -17px; */
+				overflow-y: scroll;
+			}
+			::-webkit-scrollbar { 
+				display: none; 
 			}
 			/* #info {
 				position: absolute;
@@ -31,7 +39,7 @@
 	<body>
 		<div class="">
 			<div class="row">
-				<div class="col-sm-3" id="MatrixStack"></div>
+				<div class="col-sm-3 scrollable" id="MatrixStack"></div>
 				<div class="col-sm-9" id="container"></div>
 			</div>
 		</div>
@@ -76,6 +84,7 @@
 			animate();
 			
 			function init() {
+				document.getElementById("MatrixStack").style.height = `${window.innerHeight}px`;
 				container = document.getElementById( 'container' );
 				
 				// Camera Settings
@@ -294,7 +303,7 @@
 					raycaster.setFromCamera( mouse3D, camera );
 					var intersects = raycaster.intersectObjects( figures );
 					if ( intersects.length > 0 ) {
-						intersects[ 0 ].object.material.color.setHex( Math.random() * 0xffffff );
+						intersects[ 0 ].object.material.color.setHex( 0x204060 );
 						points.vertices.push(intersects[0].object.position);
 					}
 				}
