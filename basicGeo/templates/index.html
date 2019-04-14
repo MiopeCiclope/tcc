@@ -31,24 +31,7 @@
 	<body>
 		<div class="">
 			<div class="row">
-				<div class="col-sm-2">
-					<div class="toast-header" onclick="clicked(this)" id="1">
-						<strong class="mr-auto">Matriz QWER</strong>
-						<p class="text-muted">1 2 3 4</br>1 2 3 4</br>1 2 3 4</br>1 2 3 4</br></p>
-					</div>
-					<div class="toast-header" onclick="clicked(this)" id="2">
-						<strong class="mr-auto">Matriz QWER</strong>
-						<p class="text-muted">1 2 3 4</br>1 2 3 4</br>1 2 3 4</br>1 2 3 4</br></p>
-					</div>
-					<div class="toast-header" onclick="clicked(this)" id="3">
-						<strong class="mr-auto">Matriz QWER</strong>
-						<p class="text-muted">1 2 3 4</br>1 2 3 4</br>1 2 3 4</br>1 2 3 4</br></p>
-					</div>
-					<div class="toast-header" onclick="clicked(this)"  id="4">
-						<strong class="mr-auto">Matriz QWER</strong>
-						<p class="text-muted">1 2 3 4</br>1 2 3 4</br>1 2 3 4</br>1 2 3 4</br></p>
-					</div>
-				</div>
+				<div class="col-sm-3" id="MatrixStack"></div>
 				<div class="col-sm-9" id="container"></div>
 			</div>
 		</div>
@@ -63,7 +46,7 @@
 
 		<script>
 			function clicked(item) {
-				alert($(item).attr("id"));
+				alert($(item.children[0]).attr("value"));
 			}
 
 			/*global THREE*/
@@ -82,7 +65,12 @@
 			var transformControl;
 			var ARC_SEGMENTS = 200;;
 			var figures = [];		//List of objects
+			var figureLinkDiv = [];
+			var figureSelected = [];
 			var points = new THREE.Geometry();
+			var matrixStack = document.getElementById('MatrixStack');
+			var divCount = 0;
+			var FigureCount = -1;
 
 			init();
 			animate();
@@ -162,6 +150,13 @@
 					cancelHideTransorm();
 				} );
 				transformControl.addEventListener( 'mouseUp', function( e ) {
+					var figureId = -1;
+					for (i = 0; i < figures.length; i++){
+						if(figures[i] == e.target.object){
+							figureId = i; 
+						}
+					}
+					AddDiv(e.target.object, figureId);
 					delayHideTransform();
 				} );
 				scene.add( transformControl );
@@ -208,7 +203,8 @@
 				
 				var settings = {
 					'Add Points' : function() {
-										addPoint(new THREE.Vector3(0, 0, 0));
+										var addedObject = addPoint(new THREE.Vector3(0, 0, 0));
+										AddDiv(addedObject, -1);
 									},
 					'Select Points' : function() {
 										var selectedObject = scene.getObjectByName("TransformControl");
@@ -224,12 +220,15 @@
 										var linePoints = new THREE.Geometry();
 
 										// This calculation is to find the center of the object
+										var temp = new THREE.Vector3(0,0,0);
 										for (i = 0; i < length; i++){
 											if (i != 0){
-												var temp = figures[i-1].position.clone();
-												console.log(temp);
+												if (i == 1){
+													temp = figures[i-1].position.clone();
+												}
 												inicialVector = temp.add(figures[i].position).clone();
 												inicialVector = inicialVector.divideScalar(2);
+												temp = inicialVector;
 											}
 											linePoints.vertices.push(figures[i].position);
 										}
@@ -261,9 +260,6 @@
 										}
 
 										figures.push(obj);
-									},
-					'fuck' : function() {
-
 									}
 				}
 
@@ -271,7 +267,23 @@
 				gui.add(settings, 'Add Points');
 				gui.add(settings, 'Select Points');
 				gui.add(settings, 'Draw Figure');
-				gui.add(settings, 'fuck');
+
+				function AddDiv ( vector, figureId ) {
+					var figureNumber = figureId;
+					if (figureId == -1){
+						FigureCount++;
+						figureNumber = FigureCount;
+					}
+
+					matrixStack.innerHTML =`<div class="toast-header" onclick="clicked(this)" id="${divCount}">
+												<input type="hidden" name="figureId" value="${figureNumber}">
+												<strong class="mr-auto">Figura ${figureNumber}</strong>
+												<p class="text-muted">${vector.position.x.toFixed(2)} ${vector.position.y.toFixed(2)} ${vector.position.z.toFixed(2)}</br></p>
+											</div>` + matrixStack.innerHTML;
+					figureLinkDiv.push();
+					divCount++;
+
+				}
 
 				function onDocumentMouseDown( event ) {    
 					event.preventDefault();
@@ -302,6 +314,7 @@
 				object.receiveShadow = true;
 				scene.add( object );	
 				figures.push( object );
+
 				return object;
 			}
 
