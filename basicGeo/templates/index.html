@@ -44,6 +44,7 @@
 			</div>
 		</div>
 		<script src="../static/js/three.js"></script>
+		<script src="../static/js/math.js"></script>
 
 		<script src="../static/js/controls/DragControls.js"></script>
 		<script src="../static/js/controls/OrbitControls.js"></script>
@@ -54,7 +55,8 @@
 
 		<script>
 			function clicked(item) {
-				alert($(item.children[0]).attr("value"));
+				var text = $(item).find('p:first').text();//find first p text
+				alert(text);
 			}
 
 			/*global THREE*/
@@ -275,11 +277,36 @@
 				gui.add(settings, 'Select Points');
 				gui.add(settings, 'Draw Figure');
 
+				function GetMatrix (figureDiv) {
+					var stringNum = ""+figureDiv;
+					var divElement = document.getElementById(figureDiv);
+
+					var text = $(divElement).find('p:first').text();
+					var matrixSlipt = text.split(" ");
+					var defMatrix = []
+					for (let index = 0; index < matrixSlipt.length; index=index+3) {
+						var element = index;
+						defMatrix.push([matrixSlipt[element],matrixSlipt[element+1],matrixSlipt[element+2]])
+					}
+					var matrix = math.matrix(defMatrix);
+					
+					// var meuCu = math.inv(matrix);
+					return matrix;
+				}
+
 				function AddDiv ( vector, figureId) {
 					var figureNumber = figureId;
+					var lastFigure = divCount;
+
 					if (figureId == -1){
 						FigureCount++;
 						figureNumber = FigureCount;
+						lastFigure = -1;
+					}
+
+					var lastFigureMatrix = math.zeros(3);
+					if (lastFigure > -1){
+						var lastFigureMatrix = GetMatrix(lastFigure-1);
 					}
 
 					var matrix = `${vector.position.x.toFixed(2)} ${vector.position.y.toFixed(2)} ${vector.position.z.toFixed(2)}`;
@@ -290,7 +317,7 @@
 							var temp = vector.position.clone();
 							var relativePosition = vector.children[i].getWorldPosition().clone();
 
-							matrix += `${relativePosition.x.toFixed(2)} ${relativePosition.y.toFixed(2)} ${relativePosition.z.toFixed(2)}</br>`;
+							matrix += `${relativePosition.x.toFixed(2)} ${relativePosition.y.toFixed(2)} ${relativePosition.z.toFixed(2)} </br>`;
 						}
 					}
 
