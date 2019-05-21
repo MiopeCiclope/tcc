@@ -1,0 +1,101 @@
+
+
+
+Desenvolvimento
+
+    Neste capítulo serão detalhadas as etapas do desenvolvimento do SE. A principios será apresentada a Visão
+    geral, os conceitos de Computação Gráfica necessários para o desenvolvimento do software e as ferramentas
+    utilizadas para o seu desenvolvimento. Em seguida o diagrama de caso de uso e o contexto de utilização da ferramenta.
+
+    Visão Geral
+
+        Para o desenvolvimento das funcinalidades desta ferramenta foram utilizados HTML5 e JavaScript, para
+        para o desenvolvimento das intefaces, geração de código em tempo de execução e captura de eventos de 
+        ações do usuário, CSS3 para a estilização da página, python 3.4 e Django 1.9 para criação de página web 
+        e gerenciamento da aplicação do site, e  ThreeJs para criação do ambiente interativo controle de 
+        cena, renderização de objetos, controle de câmera e controle de iluminação.
+
+        Big Ass descrição para ter mais texto
+        HTML5
+        JavaScript
+        CSS3
+        python
+        Django
+        ThreeJs
+
+    Conceitos de Computação gráfica
+
+        Cena 
+            É a estrutura de dados que contem toda a informação de objestos presentes no modelo de universo. Esses objetos
+            incluem camera, luz, figuras, texturas e dados de movimentação os objetos não necessáriamente estarão 
+            visivies, o dados da cena só serão manifestados ao usuário após passarem pelo processo de renderização,
+            caso sejam necessários.
+
+        Renderização 
+            É o processo de geração de imagens a partir de modelos 2D ou 3D, utilizando os dados armazenados na cena.
+
+        câmera
+            A câmera é o objeto que define a visão da cena. É responsável por controlar quais dados da cena
+            serão enviados ao renderizador para serem processado e apresentados ao usuário. Também é responsável
+            pela visão que será mostrada, a partir da posição da camera o renderizador vai atualizar o formato
+            e dimensões dos objetos modelados na cena para criar a ilusão de tridimensionalidade, em caso de modelos
+            3d.
+        
+        luz
+            Objeto responsável pela iluminação e criação de sombras na cena. É o ponde de onde a luz parte
+            em direção aos objetos da cena. Muito importante para o auxilio na ilusão de 3D e da diferenciação
+            dos materiais e texturas dos objetos da cena.        
+
+        Transformações:
+            Translação
+                Define a posição do modelo no universo. Ao aplicar essa transformação o modelo não altera 
+                seu tamanho ou forma, apenas sua posição.
+            Rotação
+                Define a orientação do modelo no universo. Essa transformação pode ser aplicada em relação 
+                ao próprio objeto ou em relação a um ponto fora do objeto. Esta tranformação não altera a posição
+                ou a escala do objeto.
+
+            Escala
+                Consiste na alteração do tamanho do objeto, podendo ser uniforme, alterando o objeto em todas 
+                as dimenções com a mesma intensidade, ou não uniforme, onde diferentes dimensões do objeto 
+                são alteradas por valores diferentes criando uma deformação da forma original do objeto.
+        
+        Projeções
+            É a reprensentação bidimensional de um objeto tridimensional.
+
+            Paralela
+                O centro de projeçao é um ponto específico no espaço específico. A projeção do objeto é deformada
+                proporcionalmente a distancia do centro de projeção.
+
+            Perspectiva
+                O centro de projeção se encontra no infinito portanto não há distorção na projeção do objeto.
+                
+    Requisitos Funcionais
+        Os requisitos funcionais descrevem as funcionalidades que cada tipo de usuário deve ser capaz de acessar 
+        no sistema (SOMMERVILLE, 2011). Esses requisitos estão relacionados às atividades que o sistema realiza.
+
+        RF1: O sistema deve permitir a inclusão de ponto a partir do click do usuário dentro do ambiente de interação
+        RF2: O sistema deve permitir a transformação de translação do objeto criado no ambiente de interação
+        RF3: O sistema deve permitir a transformação de rotação do objeto criado no ambiente de interação
+        RF4: O sistema deve permitir a transformação de escala do objeto criado no ambiente de interação
+        RF5: O sistema deve permitir a Projeção perspectiva do objeto criado no ambiente de interação
+        RF6: O sistema deve permitir a Projeção paralela do objeto criado no ambiente de interação
+        RF7: Para cada objeto criado, transformação realizada ou projeção do objeto o sistema disponibilizará 
+                as coordenadas do objeto resultante em uma pilha de histórico.
+        RF8: Ao clickar em um grupo de coordenadas será mostrasda qual transformação foi aplicada para 
+
+
+    Requisitos Não Funcionais
+    Diagrama de caso de uso
+    UML
+
+fonte Imagens
+
+camera 
+https://docs.unity3d.com/Manual/PhysicalCameras.html
+
+luz
+https://unity3d.com/learn/tutorials/topics/graphics/choosing-lighting-technique
+
+Referencia 
+SOMMERVILLE, I. Engenharia de Software-9a Edição. [S.l.]: Pearson Education, 2011.
