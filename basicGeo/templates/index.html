@@ -81,6 +81,7 @@
 			var matrixStack = document.getElementById('MatrixStack');
 			var divCount = 0;
 			var FigureCount = -1;
+			var projectionPlane = "";
 
 			init();
 			animate();
@@ -118,7 +119,7 @@
 				var planeMaterial = new THREE.ShadowMaterial( { opacity: 0.2 } );
 				var plane = new THREE.Mesh( planeGeometry, planeMaterial );
 				plane.position.y = 0;
-				plane.receiveShadow = true;
+				// plane.receiveShadow = true;
 				scene.add( plane );
 				
 				var helper = new THREE.GridHelper( 2000, 100 );
@@ -214,8 +215,8 @@
 				
 				var settings = {
 					'Orthogonal XY' : false,
-					'Orthogonal ZY' : false,
 					'Orthogonal YZ' : false,
+					'Orthogonal XZ' : false,
 					'Add Points' : function() {
 										var addedObject = addPoint(new THREE.Vector3(0, 0, 0));
 										AddDiv(addedObject, -1, "");
@@ -275,18 +276,51 @@
 									},
 					'Project' : function() { 
 										var planeGeometry2 = new THREE.PlaneGeometry( 100, 100 );
-										planeGeometry2.rotateX( - Math.PI / 2 );
+
+										if (projectionPlane == "XZ"){
+											planeGeometry2.rotateX( - Math.PI / 2 );
+										}
+										else if (projectionPlane == "YZ"){
+											planeGeometry2.rotateY( - Math.PI / 2 );
+										}
+
 										var planeMaterial2 = new THREE.MeshLambertMaterial( {color: 0x072556, side: THREE.DoubleSide} );
 										var plane2 = new THREE.Mesh( planeGeometry2, planeMaterial2 );
-										plane2.position.y = 0;
+
+										if (projectionPlane == "XZ"){
+											plane2.position.y = 0;
+										}
+										else if  (projectionPlane == "YZ"){
+											plane2.position.x = 0;
+										}
+										else {
+											plane2.position.z = 0;
+										}
+
 										scene.add( plane2 );
 										var linePoints = new THREE.Geometry();
 
-										var trans = math.matrix([
-												[1, 0, 0],
-												[0, 0, 0],
-												[0, 0, 1]
-											]);
+										if (projectionPlane == "XZ"){
+											var trans = math.matrix([
+													[1, 0, 0],
+													[0, 0, 0],
+													[0, 0, 1]
+												]);
+										}
+										else if  (projectionPlane == "YZ"){
+											var trans = math.matrix([
+													[0, 0, 0],
+													[0, 1, 0],
+													[0, 0, 1]
+												]);
+										}
+										else {
+											var trans = math.matrix([
+													[1, 0, 0],
+													[0, 1, 0],
+													[0, 0, 0]
+												]);
+										}
 
 										var obj = figures[0];
 										var vertices = obj.children[obj.children.length-1].geometry.vertices;
@@ -303,14 +337,22 @@
 
 										// Tem que diminuir soh a posicao do eixo que esta sendo omitido.
 										var negative = obj.position.clone().divideScalar(-1);
-										line.position.add(new THREE.Vector3(0, negative.y,0));
-										plane2.position.add(new THREE.Vector3(0, negative.y,0));
+										if (projectionPlane == "XZ"){
+											line.position.add(new THREE.Vector3(0, negative.y,0));
+										}
+										else if  (projectionPlane == "YZ"){
+											line.position.add(new THREE.Vector3(negative.x, 0 ,0));
+										}
+										else {
+											line.position.add(new THREE.Vector3(0, 0 ,negative.z));
+										}
+										// plane2.position.add(new THREE.Vector3(0, negative.y,0));
 
 										scene.add(line);
 										obj.add(line);
-										obj.add(plane2);
+										// obj.add(plane2);
 
-										AddDiv(obj, -1);
+										// AddDiv(obj, -1);
 									}
 				}
 
@@ -320,9 +362,18 @@
 				gui.add(settings, 'Draw Figure');
 
 				var perspectiveFolder = gui.addFolder( 'Perspective' );
-				perspectiveFolder.add(settings, 'Orthogonal XY');
-				perspectiveFolder.add(settings, 'Orthogonal ZY');
-				perspectiveFolder.add(settings, 'Orthogonal YZ');
+				perspectiveFolder.add(settings, 'Orthogonal XY').onChange(function(value){
+					settings['Orthogonal XY'] = value;
+					projectionPlane = "XY";
+				});
+				perspectiveFolder.add(settings, 'Orthogonal YZ').onChange(function(value){
+					settings['Orthogonal YZ'] = value;
+					projectionPlane = "YZ";
+				});
+				perspectiveFolder.add(settings, 'Orthogonal XZ').onChange(function(value){
+					settings['Orthogonal XZ'] = value;
+					projectionPlane = "XZ";
+				});
 				perspectiveFolder.add(settings, 'Project');
 
 				function GetMatrix (figureDiv) {
