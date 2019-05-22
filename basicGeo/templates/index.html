@@ -82,6 +82,7 @@
 			var divCount = 0;
 			var FigureCount = -1;
 			var projectionPlane = "";
+			var projectOn = false;
 
 			init();
 			animate();
@@ -351,7 +352,7 @@
 										scene.add(line);
 										obj.add(line);
 										// obj.add(plane2);
-
+										projectOn = true;
 										// AddDiv(obj, -1);
 									}
 				}
@@ -408,22 +409,49 @@
 					}
 
 					var matrix = `${vector.position.x.toFixed(2)} ${vector.position.y.toFixed(2)} ${vector.position.z.toFixed(2)}`;
+					var projectionMatrix = "";
+
 					if (vector.children.length > 0){
 						matrix = "";
-						var length  = vector.children.length-1;
+						projectionMatrix = "";
+						var length  = 0;
+
+						if (projectOn) {
+							var length  = vector.children.length-2;
+						}
+						else{
+							var length  = vector.children.length-1;							
+						}
+
 						for (i = 0; i < length; i++){
 							var temp = vector.position.clone();
 							var relativePosition = vector.children[i].getWorldPosition().clone();
 
 							matrix += `${relativePosition.x.toFixed(2)} ${relativePosition.y.toFixed(2)} ${relativePosition.z.toFixed(2)} </br>`;
 						}
+
+						if (projectOn) {
+							var temp = vector.position.clone();
+							var relativePosition = vector.children[i+1].getWorldPosition().clone();
+
+							projectionMatrix += `${relativePosition.x.toFixed(2)} ${relativePosition.y.toFixed(2)} ${relativePosition.z.toFixed(2)} </br>`;
+						}
+					}
+
+					var projectionDiv = "";
+					if (projectOn){
+						projectionDiv = `<div class="toast-header" onclick="clicked(this)" id="p${divCount}">
+													<input type="hidden" name="projectionId" value="p${figureNumber}">
+													<strong class="mr-auto">Projeção p${figureNumber}</strong>
+													<p class="text-muted">${projectionMatrix}</br></p>
+												</div>`;
 					}
 
 					matrixStack.innerHTML =`<div class="toast-header" onclick="clicked(this)" id="${divCount}">
 												<input type="hidden" name="figureId" value="${figureNumber}">
 												<strong class="mr-auto">Figura ${figureNumber}</strong>
 												<p class="text-muted">${matrix}</br></p>
-											</div>` + matrixStack.innerHTML;
+											</div>`+ projectionDiv + matrixStack.innerHTML;
 					figureLinkDiv.push();
 					divCount++;
 
