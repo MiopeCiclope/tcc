@@ -353,7 +353,7 @@
 										obj.add(line);
 										// obj.add(plane2);
 										projectOn = true;
-										// AddDiv(obj, -1);
+										AddDiv(obj, -1);
 									}
 				}
 
@@ -417,24 +417,20 @@
 						var length  = 0;
 
 						if (projectOn) {
-							var length  = vector.children.length-2;
-						}
-						else{
-							var length  = vector.children.length-1;							
+							var projectStuff = vector.children[vector.children.length-1].geometry.vertices
+							var length = projectStuff.length-1;
+
+							for (i = 0; i < length; i++){
+								var relativePosition = projectStuff[i+1].clone();
+								projectionMatrix += `${relativePosition.x.toFixed(2)} ${relativePosition.y.toFixed(2)} ${relativePosition.z.toFixed(2)} </br>`;
+							}
 						}
 
+						var length  = vector.children.length-1;							
 						for (i = 0; i < length; i++){
-							var temp = vector.position.clone();
 							var relativePosition = vector.children[i].getWorldPosition().clone();
-
 							matrix += `${relativePosition.x.toFixed(2)} ${relativePosition.y.toFixed(2)} ${relativePosition.z.toFixed(2)} </br>`;
-						}
 
-						if (projectOn) {
-							var temp = vector.position.clone();
-							var relativePosition = vector.children[i+1].getWorldPosition().clone();
-
-							projectionMatrix += `${relativePosition.x.toFixed(2)} ${relativePosition.y.toFixed(2)} ${relativePosition.z.toFixed(2)} </br>`;
 						}
 					}
 
