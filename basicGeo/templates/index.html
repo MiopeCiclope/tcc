@@ -56,7 +56,9 @@
 		<script>
 			function clicked(item) {
 				var text = $(item).find('p:first').text();//find first p text
-				alert(text);
+
+				var qwer = "#collapse"+item.id;
+				$(qwer).collapse('toggle');
 			}
 
 			/*global THREE*/
@@ -447,6 +449,11 @@
 												<input type="hidden" name="figureId" value="${figureNumber}">
 												<strong class="mr-auto">Figura ${figureNumber}</strong>
 												<p class="text-muted">${matrix}</br></p>
+											</div>
+											<div class="collapse" id="collapse${divCount}">
+												<div class="card-body">
+													Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+												</div>
 											</div>`+ projectionDiv + matrixStack.innerHTML;
 					figureLinkDiv.push();
 					divCount++;
