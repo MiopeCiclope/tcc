@@ -29,11 +29,7 @@
 	<body>
 		<div class="">
 			<div class="row">
-				<div class="col-sm-3">
-					<div class="row scrollable" id="MatrixStack">
-
-					</div>
-				</div>
+				<div class="col-sm-3 scrollable" id="MatrixStack"></div>
 				<div class="col-sm-9" id="container"></div>
 			</div>
 		</div>
@@ -523,19 +519,43 @@
 
 					var projectionDiv = "";
 					if (projectOn){
+
+						var projectionMatrixStack = ""
+						if (projectionPlane == "XZ"){
+							projectionMatrixStack = "1, 0, 0, 0 </br>0, 0, 0, 0 </br>0, 0, 1, 0 </br>0, 0, 0, 1";
+						}
+						else if  (projectionPlane == "YZ"){
+							projectionMatrixStack = "0, 0, 0, 0 </br>0, 1, 0, 0 </br>0, 0, 1, 0 </br>0, 0, 0, 1";
+						}
+						else {
+							projectionMatrixStack = "1, 0, 0, 0 </br>0, 1, 0, 0 </br>0, 0, 0, 0 </br>0, 0, 0, 1";
+						}
+
 						projectionDiv = `<div class="toast-header" onclick="clicked(this)" id="p${divCount}">
 													<input type="hidden" name="projectionId" value="p${figureNumber}">
 													<strong class="mr-auto">Projeção p${figureNumber}</strong>
 													<p class="text-muted">${projectionMatrix}</br></p>
+												</div>
+												<div class="collapse justify-content-center" id="collapsep${divCount}" style="width: 18rem; padding: 15px;">
+													<div class="card text-center mb-3" style="max-width: 18rem;">
+														<div class="card-header text-white bg-warning">Projeção</div>
+														<div class="card-body">													
+															<p class="card-title">Matriz</p>
+															<p> ${projectionMatrixStack}</p>
+														</div>
+													</div>
 												</div>`;
 					}
+
 					var transform = transformControl.getMode();
 					var ptbrTransform = "";
 					var matrixTransform = "";
+					var color = "";
 
 					if (transform == "translate"){
 						ptbrTransform = "Translação";
 						matrixTransform = "1, 0, 0, 0 </br>0, 1, 0, 0 </br>0, 0, 1, 0 </br>x, y, z, 1";
+						color = "primary";
 					}
 					else if (transform == "rotate"){
 						var axis = transformControl.axis;
@@ -549,22 +569,24 @@
 						else {
 							matrixTransform = "coseno, -seno, 0, 0 </br>seno, coseno, 0, 0 </br>0, 0, 1, 0 </br>0, 0, 0, 1";
 						}
+						color = "success";
 					}
 					else if (transform == "scale"){
 						ptbrTransform = "Escala";
 						matrixTransform = "x, 0, 0, 0 </br>0,y, 0, 0 </br>0, 0, z, 0 </br>0, 0, 0, 1";
+						color = "danger";
 					}
 
 					matrixStack.innerHTML =`<div class="toast-header" onclick="clicked(this)" id="${divCount}">
 												<input type="hidden" name="figureId" value="${figureNumber}">
 												<strong class="mr-auto">Figura ${figureNumber}</strong>
-												<p class="text-muted">${matrix}</br></p>
+												<p class="text-muted text-center">${matrix}</br></p>
 											</div>
-											<div class="collapse" id="collapse${divCount}" style="width: 18rem; padding: 0px;">
-												<div class="card text-white text-center bg-dark mb-3" style="max-width: 18rem;">
-													<div class="card-header">Transformação: ${ptbrTransform}</div>
+											<div class="collapse justify-content-center" id="collapse${divCount}" style="width: 18rem; padding: 15px;">
+												<div class="card text-center mb-3" style="max-width: 18rem;">
+													<div class="card-header text-white bg-${color}">${ptbrTransform}</div>
 													<div class="card-body">													
-														<p class="card-title">Matriz da transformação</p>
+														<p class="card-title">Matriz</p>
 														<p> ${matrixTransform}</p>
 													</div>
 												</div>
