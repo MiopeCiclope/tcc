@@ -207,20 +207,20 @@
 				}
 				
 				var settings = {
-					'Orthogonal XY' : false,
-					'Orthogonal YZ' : false,
-					'Orthogonal XZ' : false,
-					'Add Points' : function() {
+					'Ortogonal XY' : false,
+					'Ortogonal YZ' : false,
+					'Ortogonal XZ' : false,
+					'Adicionar Ponto' : function() {
 										var addedObject = addPoint(new THREE.Vector3(0, 0, 0));
 										AddDiv(addedObject, -1, "");
 									},
-					'Select Points' : function() {
+					'Selecionar Pontos' : function() {
 										var selectedObject = scene.getObjectByName("TransformControl");
 										scene.remove(selectedObject);
 										window.removeEventListener( 'click', addPoint );
 										window.addEventListener( 'click', onDocumentMouseDown );
 									},
-					'Draw Figure' : function() { 
+					'Desenhar Figura' : function() { 
 										scene.add(transformControl);
 
 										var length = figures.length;
@@ -267,7 +267,7 @@
 										figures.push(obj);
 										AddDiv(obj, -1);
 									},
-					'Project' : function() { 
+					'Projetar' : function() { 
 										var planeGeometry2 = new THREE.PlaneGeometry( 100, 100 );
 
 										if (projectionPlane == "XZ"){
@@ -277,7 +277,7 @@
 											planeGeometry2.rotateY( - Math.PI / 2 );
 										}
 
-										var planeMaterial2 = new THREE.MeshLambertMaterial( {color: 0x072556, side: THREE.DoubleSide} );
+										var planeMaterial2 = new THREE.MeshLambertMaterial( {color: 0x303030, side: THREE.DoubleSide} );
 										var plane2 = new THREE.Mesh( planeGeometry2, planeMaterial2 );
 
 										if (projectionPlane == "XZ"){
@@ -440,25 +440,25 @@
 				}
 
 				var gui = new dat.GUI( { width: 300 } );
-				gui.add(settings, 'Add Points');
-				gui.add(settings, 'Select Points');
-				gui.add(settings, 'Draw Figure');
+				gui.add(settings, 'Adicionar Ponto');
+				gui.add(settings, 'Selecionar Pontos');
+				gui.add(settings, 'Desenhar Figura');
 
-				var perspectiveFolder = gui.addFolder( 'Perspective' );
-				perspectiveFolder.add(settings, 'Orthogonal XY').onChange(function(value){
-					settings['Orthogonal XY'] = value;
+				var perspectiveFolder = gui.addFolder( 'Perspectiva' );
+				perspectiveFolder.add(settings, 'Ortogonal XY').onChange(function(value){
+					settings['Ortogonal XY'] = value;
 					projectionPlane = "XY";
 				});
-				perspectiveFolder.add(settings, 'Orthogonal YZ').onChange(function(value){
-					settings['Orthogonal YZ'] = value;
+				perspectiveFolder.add(settings, 'Ortogonal YZ').onChange(function(value){
+					settings['Ortogonal YZ'] = value;
 					projectionPlane = "YZ";
 				});
-				perspectiveFolder.add(settings, 'Orthogonal XZ').onChange(function(value){
-					settings['Orthogonal XZ'] = value;
+				perspectiveFolder.add(settings, 'Ortogonal XZ').onChange(function(value){
+					settings['Ortogonal XZ'] = value;
 					projectionPlane = "XZ";
 				});
-				perspectiveFolder.add(settings, 'Project');
-				perspectiveFolder.add(settings, 'ProjectPoint');
+				perspectiveFolder.add(settings, 'Projetar');
+				// perspectiveFolder.add(settings, 'ProjectPoint');
 
 				function GetMatrix (figureDiv) {
 					var stringNum = ""+figureDiv;
@@ -520,15 +520,19 @@
 					var projectionDiv = "";
 					if (projectOn){
 
-						var projectionMatrixStack = ""
+						var projectionMatrixStack = "";
+						var projectIn = "";
 						if (projectionPlane == "XZ"){
-							projectionMatrixStack = "1, 0, 0, 0 </br>0, 0, 0, 0 </br>0, 0, 1, 0 </br>0, 0, 0, 1";
+							projectionMatrixStack = "1, 0, 0, 0 </br>0, 0, 0, 0 </br>0, 0, 1, 0 </br> 0, 0, 0, 1 ";
+							projectIn = "XZ";
 						}
-						else if  (projectionPlane == "YZ"){
-							projectionMatrixStack = "0, 0, 0, 0 </br>0, 1, 0, 0 </br>0, 0, 1, 0 </br>0, 0, 0, 1";
+						else if  (projectionPlane == "XZ"){
+							projectionMatrixStack = "0, 0, 0, 0 </br>0, 1, 0, 0 </br>0, 0, 1, 0 </br> 0, 0, 0, 1 ";
+							projectIn = "XZ";
 						}
 						else {
-							projectionMatrixStack = "1, 0, 0, 0 </br>0, 1, 0, 0 </br>0, 0, 0, 0 </br>0, 0, 0, 1";
+							projectionMatrixStack = "1, 0, 0, 0 </br>0, 1, 0, 0 </br>0, 0, 0, 0 </br> 0, 0, 0, 1 ";
+							projectIn = "XY";
 						}
 
 						projectionDiv = `<div class="toast-header" onclick="clicked(this)" id="p${divCount}">
@@ -538,7 +542,7 @@
 												</div>
 												<div class="collapse justify-content-center" id="collapsep${divCount}" style="width: 18rem; padding: 15px;">
 													<div class="card text-center mb-3" style="max-width: 18rem;">
-														<div class="card-header text-white bg-warning">Projeção</div>
+														<div class="card-header text-white bg-warning">Projeção em ${projectIn}</div>
 														<div class="card-body">													
 															<p class="card-title">Matriz</p>
 															<p> ${projectionMatrixStack}</p>
@@ -554,26 +558,26 @@
 
 					if (transform == "translate"){
 						ptbrTransform = "Translação";
-						matrixTransform = "1, 0, 0, 0 </br>0, 1, 0, 0 </br>0, 0, 1, 0 </br>x, y, z, 1";
+						matrixTransform = "1, 0, 0, 0 </br>0, 1, 0, 0 </br>0, 0, 1, 0 </br>x, y, z, 1 ";
 						color = "primary";
 					}
 					else if (transform == "rotate"){
 						var axis = transformControl.axis;
 						ptbrTransform = "Rotação em "+axis;
 						if (axis == "Y"){
-							matrixTransform = "coseno, 0, seno, 0 </br>0, 1, 0, 0 </br>-seno, 0, coseno, 0 </br>0, 0, 0, 1";
+							matrixTransform = "coseno(t), 0, seno(t), 0 </br>0, 1, 0, 0 </br>-seno(t), 0, coseno(t), 0 </br>0, 0, 0, 1 ";
 						}						
 						else if (axis == "X"){
-							matrixTransform = "1, 0, 0, 0 </br>0, coseno, -seno, 0 </br>0, seno, coseno, 0 </br>0, 0, 0, 1";
+							matrixTransform = "1, 0, 0, 0 </br>0, coseno(t), -seno(t), 0 </br>0, seno(t), coseno(t), 0 </br>0, 0, 0, 1 ";
 						}
 						else {
-							matrixTransform = "coseno, -seno, 0, 0 </br>seno, coseno, 0, 0 </br>0, 0, 1, 0 </br>0, 0, 0, 1";
+							matrixTransform = "coseno(t), -seno(t), 0, 0 </br>seno(t), coseno, 0, 0 </br>0, 0, 1, 0 </br>0, 0, 0, 1 ";
 						}
 						color = "success";
 					}
 					else if (transform == "scale"){
 						ptbrTransform = "Escala";
-						matrixTransform = "x, 0, 0, 0 </br>0,y, 0, 0 </br>0, 0, z, 0 </br>0, 0, 0, 1";
+						matrixTransform = "x, 0, 0, 0 </br>0,y, 0, 0 </br>0, 0, z, 0 </br>0, 0, 0, 1 ";
 						color = "danger";
 					}
 
