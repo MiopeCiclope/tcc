@@ -244,14 +244,11 @@
 
 										// It has to be divided in every iteration of the upper loop
 										var triangulated = inicialVector;
-										
-										// Workarroud for the add bug, it sums the position of the objects
 										var negative = triangulated.clone().divideScalar(-1);
 
 										var length2 = figures.length;
 										var obj = addPoint(triangulated);
 										for (i = 0; i < length2; i++){
-											// For some reason the add bug does not happen with the line, I guess
 											figures[i].position.add(negative);
 											obj.add(figures[i]);
 										}
@@ -339,11 +336,9 @@
 										else {
 											line.position.add(new THREE.Vector3(0, 0 ,negative.z));
 										}
-										// plane2.position.add(new THREE.Vector3(0, negative.y,0));
 
 										scene.add(line);
 										obj.add(line);
-										// obj.add(plane2);
 										projectOn = true;
 										AddDiv(obj, -1);
 									},
@@ -420,7 +415,6 @@
 										var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
 										var line = new THREE.Line( linePoints, material );
 
-										// Tem que diminuir soh a posicao do eixo que esta sendo omitido.
 										var negative = obj.position.clone().divideScalar(-1);
 										if (projectionPlane == "XZ"){
 											line.position.add(new THREE.Vector3(0, negative.y, 0));
