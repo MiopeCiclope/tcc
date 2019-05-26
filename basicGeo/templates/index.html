@@ -265,29 +265,29 @@
 										AddDiv(obj, -1);
 									},
 					'Projetar' : function() { 
-										var planeGeometry2 = new THREE.PlaneGeometry( 100, 100 );
+										// var planeGeometry2 = new THREE.PlaneGeometry( 100, 100 );
 
-										if (projectionPlane == "XZ"){
-											planeGeometry2.rotateX( - Math.PI / 2 );
-										}
-										else if (projectionPlane == "YZ"){
-											planeGeometry2.rotateY( - Math.PI / 2 );
-										}
+										// if (projectionPlane == "XZ"){
+										// 	planeGeometry2.rotateX( - Math.PI / 2 );
+										// }
+										// else if (projectionPlane == "YZ"){
+										// 	planeGeometry2.rotateY( - Math.PI / 2 );
+										// }
 
-										var planeMaterial2 = new THREE.MeshLambertMaterial( {color: 0x303030, side: THREE.DoubleSide} );
-										var plane2 = new THREE.Mesh( planeGeometry2, planeMaterial2 );
+										// var planeMaterial2 = new THREE.MeshLambertMaterial( {color: 0x303030, side: THREE.DoubleSide} );
+										// var plane2 = new THREE.Mesh( planeGeometry2, planeMaterial2 );
 
-										if (projectionPlane == "XZ"){
-											plane2.position.y = 0;
-										}
-										else if  (projectionPlane == "YZ"){
-											plane2.position.x = 0;
-										}
-										else {
-											plane2.position.z = 0;
-										}
+										// if (projectionPlane == "XZ"){
+										// 	plane2.position.y = 0;
+										// }
+										// else if  (projectionPlane == "YZ"){
+										// 	plane2.position.x = 0;
+										// }
+										// else {
+										// 	plane2.position.z = 0;
+										// }
 
-										scene.add( plane2 );
+										// scene.add( plane2 );
 										var linePoints = new THREE.Geometry();
 
 										if (projectionPlane == "XZ"){
@@ -442,17 +442,44 @@
 				perspectiveFolder.add(settings, 'Ortogonal XY').onChange(function(value){
 					settings['Ortogonal XY'] = value;
 					projectionPlane = "XY";
+					DrawPlane ();
 				});
 				perspectiveFolder.add(settings, 'Ortogonal YZ').onChange(function(value){
 					settings['Ortogonal YZ'] = value;
 					projectionPlane = "YZ";
+					DrawPlane ();
 				});
 				perspectiveFolder.add(settings, 'Ortogonal XZ').onChange(function(value){
 					settings['Ortogonal XZ'] = value;
 					projectionPlane = "XZ";
+					DrawPlane ();
 				});
 				perspectiveFolder.add(settings, 'Projetar');
 				// perspectiveFolder.add(settings, 'ProjectPoint');
+				function DrawPlane () {
+					var planeGeometry2 = new THREE.PlaneGeometry( 100, 100 );
+
+					if (projectionPlane == "XZ"){
+						planeGeometry2.rotateX( - Math.PI / 2 );
+					}
+					else if (projectionPlane == "YZ"){
+						planeGeometry2.rotateY( - Math.PI / 2 );
+					}
+
+					var planeMaterial2 = new THREE.MeshLambertMaterial( {color: 0x303030, side: THREE.DoubleSide} );
+					var plane2 = new THREE.Mesh( planeGeometry2, planeMaterial2 );
+
+					if (projectionPlane == "XZ"){
+						plane2.position.y = 0;
+					}
+					else if  (projectionPlane == "YZ"){
+						plane2.position.x = 0;
+					}
+					else {
+						plane2.position.z = 0;
+					}
+					scene.add( plane2 );
+				}
 
 				function GetMatrix (figureDiv) {
 					var stringNum = ""+figureDiv;
